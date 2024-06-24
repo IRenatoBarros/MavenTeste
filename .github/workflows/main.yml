@@ -13,20 +13,22 @@ jobs:
     runs-on: ubuntu-latest
  
     steps:
-      - name: Checkout do código-fonte
-        uses: actions/checkout@v4
-      - name: Compilar código Java
-        run: javac -d out src/*.java
+        - uses: actions/checkout@v4
+        - name: Set up JDK 19
+          uses: actions/setup-java@v3
+          with:
+            java-version: '19'
+            distribution: 'temurin'
  
-      - name: Git Version
-        id: version
-        uses: codacy/git-version@2.7.1
+        - name: Git Version
+          id: version
+          uses: codacy/git-version@2.7.1
  
-      - name: Docker Build & Push Action
-        uses: mr-smithers-excellent/docker-build-push@v6.4
-        with:
-          image: irenatobarros/devops_test2
-          tag: ${{ steps.version.outputs.version }}, ${{ github.run_number }}
-          registry: docker.io
-          USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        - name: Docker Build & Push Action
+          uses: mr-smithers-excellent/docker-build-push@v6.4
+          with:
+           image: irenatobarros/devops_test2
+           tag: ${{ steps.version.outputs.version }}, ${{ github.run_number }}
+           registry: docker.io
+           USERNAME: ${{ secrets.DOCKER_USERNAME }}
+           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
