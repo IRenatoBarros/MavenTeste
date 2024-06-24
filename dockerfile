@@ -9,3 +9,4 @@ RUN mkdir -p out && \
     javac -d out src/*.java
  
 CMD ["java", "-cp", "out", "Main"]
+
