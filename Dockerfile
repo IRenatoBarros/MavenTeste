@@ -1,11 +1,14 @@
-FROM openjdk:11
- 
-WORKDIR /usr/src/app
- 
-COPY src /usr/src/app/src
- 
-RUN mkdir -p out && \
-    javac -d out src/main/java/org/example/Main.java
- 
-CMD ["java", "-cp", "out", "Main"]
+#
+# Build Package
+#
+FROM maven:3.8.3-openjdk-17 AS build
+COPY . .
+RUN mvn clean package -DskipTests
 
+#
+# Package stage
+#
+FROM openjdk:17-jdk-slim
+COPY --from=build /target/demo-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","app.jar"]
